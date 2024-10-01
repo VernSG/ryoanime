@@ -1,5 +1,10 @@
 # Getting Started with Create React App
 
+Run backend and access http://localhost:port/v2/anime/{$endpoint}
+
+and run ur fe for fetching api
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
