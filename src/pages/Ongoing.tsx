@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { fetchAnimeData } from '../utils/api';
-import { Link } from 'react-router-dom';
+import AnimeCard from '../components/AnimeCard';
 
 interface Anime {
   slug: string;
   title: string;
   episode: string;
   image: string;
-  type: string[];
+  viewers: number;
+  rating: number;
+  description: string;
 }
 
 const Ongoing: React.FC = () => {
@@ -35,24 +37,12 @@ const Ongoing: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {animeList.map((anime) => (
-        <div key={anime.slug} className="p-4 bg-white rounded shadow">
-          <img
-            src={anime.image}
-            alt={anime.title}
-            className="w-full h-64 object-cover mb-4"
-          />
-          <h2 className="text-xl font-bold">
-            {/* Create a link to the episode player page */}
-            <Link to={`/anime/player?slug=${encodeURIComponent(anime.slug)}`}>
-              {anime.title}
-            </Link>
-          </h2>
-          <p>Episode: {anime.episode}</p>
-          <p>Type: {anime.type.join(', ')}</p>
-        </div>
-      ))}
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {animeList.map((anime) => (
+          <AnimeCard key={anime.slug} anime={anime} />
+        ))}
+      </div>
     </div>
   );
 };

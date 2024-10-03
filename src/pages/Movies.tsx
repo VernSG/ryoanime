@@ -1,27 +1,34 @@
-// pages/Movies.tsx
 import React, { useEffect, useState } from 'react';
 import { fetchAnimeData } from '../utils/api';
+import AnimeCard from '../components/AnimeCard';
 
-interface Movie {
+interface Anime {
   slug: string;
   title: string;
   episode: string;
   image: string;
+  viewers: number;
+  rating: number;
+  description: string;
 }
 
 const Movies: React.FC = () => {
-  const [moviesList, setMoviesList] = useState<Movie[]>([]);
+  const [animeList, setAnimeList] = useState<Anime[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchAnimeData('anime/movies')
-      .then(data => {
-        setMoviesList(data);
+    fetchAnimeData('movie') // Adjust this endpoint to fetch movies
+      .then((response) => {
+        if (response && response.data && Array.isArray(response.data)) {
+          setAnimeList(response.data);
+        } else {
+          setError('No data available or invalid response format');
+        }
         setLoading(false);
       })
-      .catch(err => {
-        setError(err.message);
+      .catch((err) => {
+        setError(`Failed to fetch data: ${err.message}`);
         setLoading(false);
       });
   }, []);
@@ -30,18 +37,12 @@ const Movies: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {moviesList.map((movie) => (
-        <div key={movie.slug} className="p-4 bg-white rounded shadow">
-          <img
-            src={movie.image}
-            alt={movie.title}
-            className="w-full h-64 object-cover mb-4"
-          />
-          <h2 className="text-xl font-bold">{movie.title}</h2>
-          <p>Episode: {movie.episode}</p>
-        </div>
-      ))}
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {animeList.map((anime) => (
+          <AnimeCard key={anime.slug} anime={anime} />
+        ))}
+      </div>
     </div>
   );
 };
